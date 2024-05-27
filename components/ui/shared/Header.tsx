@@ -4,6 +4,7 @@ import NavItems from "./NavItems"
 import MobileNav from "./MobileNav"
 import { Button } from "../button"
 
+
 const Header = () => {
   return (
     <header className="w-full border-b">
@@ -11,18 +12,19 @@ const Header = () => {
         <Link href="/" className="w-36">
           <Image 
             src="/assets/images/logo.png" width={128} height={38}
-            alt="Evently logo" 
+            alt="suivent logo" 
           />
         </Link>
 
           <nav className="md:flex-between hidden w-full max-w-xs">
-            <NavItems />
+            <NavItems/>
           </nav>
 
         <div className="flex w-32 justify-end gap-3">
             <MobileNav />
             <Button asChild className="rounded-full" size="lg">
-              <Link href="/sign-in">
+              <Link href="#">
+              {/* /sign-in */}
                 Login
               </Link>
             </Button>
