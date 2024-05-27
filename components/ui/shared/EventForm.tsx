@@ -10,7 +10,7 @@ import * as z from 'zod'
 import { eventDefaultValues } from "@/constants"
 import Dropdown from "./Dropdown"
 import { Textarea } from "@/components/ui/textarea"
-import { FileUploader } from "./FileUploader"
+// import { FileUploader } from "./FileUploader"
 import { useState } from "react"
 import Image from "next/image"
 import { useUploadThing } from '@/lib/uploadthing'
@@ -142,7 +142,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                 </FormItem>
               )}
             />
-          <FormField
+          {/* <FormField
               control={form.control}
               name="imageUrl"
               render={({ field }) => (
@@ -157,7 +157,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
         </div>
 
         <div className="flex flex-col gap-5 md:flex-row">
