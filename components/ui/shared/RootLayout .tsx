@@ -3,10 +3,10 @@
 import Footer from "./Footer";
 import Header from "./Header";
 
-const RootLayout = ({ children, isLoggedIn }) => {
+const RootLayout = ({ children }) => {
   return (
     <div className="flex h-screen flex-col">
-      <Header isLoggedIn={isLoggedIn} />
+      <Header/>
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
