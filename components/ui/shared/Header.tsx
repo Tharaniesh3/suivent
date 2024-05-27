@@ -7,7 +7,6 @@ import { Button } from "../button"
 import { BaseError, ConnectButton, ErrorCode, useWallet } from "@suiet/wallet-kit"
 
 const Header = () => {
-  const wallet = useWallet();
   return (
     <header className="w-full border-b">
       <div className="wrapper flex items-center justify-between">
@@ -24,20 +23,11 @@ const Header = () => {
 
         <div className="flex w-32 justify-end gap-3">
             <MobileNav />
-            <ConnectButton
-        onConnectError={(error: BaseError) => {
-           if (error.code === ErrorCode.WALLET__CONNECT_ERROR__USER_REJECTED) {
-             console.warn('user rejected the connection to ' + error.details?.wallet);
-           } else {
-             console.warn('unknown connect error: ', error);
-           }
-        }}
-      >Connect Wallet</ConnectButton>
+            <Button asChild className="rounded-full" size="lg" style={{ width: '100%' }}>
+            <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff' }}>Connect Wallet</ConnectButton>
+          </Button>
 
                <section>
-        <p>
-          <span>Wallet status:</span> {wallet.status}
-        </p>
         </section>
         </div>
       </div>
