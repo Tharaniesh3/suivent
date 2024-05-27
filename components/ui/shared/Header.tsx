@@ -1,11 +1,13 @@
+"use client"; 
 import Image from "next/image"
 import Link from "next/link"
 import NavItems from "./NavItems"
 import MobileNav from "./MobileNav"
 import { Button } from "../button"
-
+import { BaseError, ConnectButton, ErrorCode, useWallet } from "@suiet/wallet-kit"
 
 const Header = () => {
+  const wallet = useWallet();
   return (
     <header className="w-full border-b">
       <div className="wrapper flex items-center justify-between">
@@ -22,12 +24,21 @@ const Header = () => {
 
         <div className="flex w-32 justify-end gap-3">
             <MobileNav />
-            <Button asChild className="rounded-full" size="lg">
-              <Link href="#">
-              {/* /sign-in */}
-                Login
-              </Link>
-            </Button>
+            <ConnectButton
+        onConnectError={(error: BaseError) => {
+           if (error.code === ErrorCode.WALLET__CONNECT_ERROR__USER_REJECTED) {
+             console.warn('user rejected the connection to ' + error.details?.wallet);
+           } else {
+             console.warn('unknown connect error: ', error);
+           }
+        }}
+      >Connect Wallet</ConnectButton>
+
+               <section>
+        <p>
+          <span>Wallet status:</span> {wallet.status}
+        </p>
+        </section>
         </div>
       </div>
     </header>

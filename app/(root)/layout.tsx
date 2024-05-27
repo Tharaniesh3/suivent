@@ -1,6 +1,10 @@
+"use client"; 
 import Footer from "@/components/ui/shared/Footer";
 import Header from "@/components/ui/shared/Header";
-import { EnokiFlowProvider } from "@mysten/enoki/react";
+import {WalletProvider} from '@suiet/wallet-kit';
+import '@suiet/wallet-kit/style.css';
+import { StrictMode } from "react";
+
 
 export default function RootLayout({
     children,
@@ -8,13 +12,15 @@ export default function RootLayout({
     children: React.ReactNode;
   }>) {
     return (
-      // <EnokiFlowProvider apiKey='enoki_public_3ceeb98095165259c905c55aa38d2dee'>
+      <StrictMode>
+      <WalletProvider>
         <div className="flex h-screen flex-col">      
         <Header/>
         <main className="flex-1">{children}</main>
         <Footer/>
         </div>
-        // </EnokiFlowProvider>
+        </WalletProvider>
+  </StrictMode>
     );
   }
 
