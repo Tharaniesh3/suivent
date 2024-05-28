@@ -22,14 +22,11 @@ const Header = () => {
           </nav>
 
         <div className="flex w-32 justify-end gap-3">
-            <MobileNav />
             <Button asChild className="rounded-full" size="lg" style={{ width: '100%' }}>
             <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff' }}>Connect Wallet</ConnectButton>
           </Button>
-
-               <section>
-        </section>
         </div>
+        <MobileNav />
       </div>
     </header>
   )
