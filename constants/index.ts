@@ -12,7 +12,13 @@ export const headerLinks = [
       route: '/profile',
     },
   ]
-  
+  export const headerLinkswithoutsignin = [
+    {
+      label: 'Home',
+      route: '/',
+    }
+  ]
+
   export const eventDefaultValues = {
     title: '',
     description: '',

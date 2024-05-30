@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
+import EventList from "@/components/ui/shared/EventList";
+import Event from "@/lib/database/models/event.model";
 import { SuietWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link"; 
+
 export default function Home() {
+
   return (
       <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -22,7 +26,6 @@ export default function Home() {
 
           </div>
         <Image src={"/assets/images/hero.png"} alt={"hero"} height={1000} width={1000} className="max-h-[70vh] object-contain object-center 2xl:max-h-[50vh]" />
-
         </div>
       </section>
       <section id = "events" className="wrapper my-8 flex flex-col gap-89 md:gap-12">
@@ -30,6 +33,7 @@ export default function Home() {
       Events<br/> Proven Trustworthiness</h2>
       <div className=" flex w-full flex-col gap-5 md:flex-row"></div>
       CategoryFilter
+      <EventList/>
       </section>
       </>
   );
