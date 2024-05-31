@@ -82,7 +82,6 @@ export default function Profile() {
       console.error("NFT mint failed", e);
     }
   }
-
   return (
     <div className='mt-20'>
       <div className="container">

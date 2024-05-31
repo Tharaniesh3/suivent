@@ -8,6 +8,7 @@ import { useSuiClient } from "@mysten/dapp-kit";
 import { getFaucetHost, requestSuiFromFaucetV0 } from "@mysten/sui.js/faucet";
 import { ExternalLink, Github, LoaderCircle, RefreshCw } from "lucide-react";
 import { Card1, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/shared/card1";
+
 import { toast } from "sonner"
 import { BalanceChange } from "@mysten/sui.js/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -61,6 +62,9 @@ export default function Page() {
     }
   }, [session]);
 
+  /**
+   * Complete the Enoki login flow after the user is redirected back to the app.
+   */
   const completeLogin = async () => {
     try {
       await enokiFlow.handleAuthCallback();
@@ -69,6 +73,7 @@ export default function Page() {
     } finally {
       const session = await enokiFlow.getSession();
       console.log("Session", session);
+
       if (session && session.jwt){
         setSession(session);
       }
@@ -78,14 +83,144 @@ export default function Page() {
 
   const getAccountInfo = async () => {
     setAccountLoading(true);
-    const keypair = await enokiFlow.getKeypair({ network: "mainnet" });
+    const keypair = await enokiFlow.getKeypair({ network: "testnet" });
     const address = keypair.toSuiAddress();
     setSuiAddress(address);
     const balance = await client.getBalance({ owner: address });
     setBalance(parseInt(balance.totalBalance) / 10 ** 9);
     setAccountLoading(false);
   };
+  const onRequestSui = async () => {
+    const promise = async () => {
+      track("Request SUI");
+      // Ensures the user is logged in and has a SUI address.
+      if (!suiAddress) {
+        throw new Error("No SUI address found");
+      }
+
+      if (balance > 3) {
+        throw new Error("You already have enough SUI!");
+      }
+
+      // Request SUI from the faucet.
+      const res = await requestSuiFromFaucetV0({
+        host: getFaucetHost("testnet"),
+        recipient: suiAddress,
+      });
+
+      if (res.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+
+    };
+    toast.promise(promise, {
+      loading: 'Requesting SUI...',
+      success: (data) => {
+
+        console.log("SUI requested successfully!", data)
+
+        const suiBalanceChange = data.transferredGasObjects.map((faucetUpdate) => {
+          return faucetUpdate.amount / 10 ** 9;
+        }).reduce((acc: number, change: any) => {
+          return acc + change;
+        }, 0);
+        setBalance( balance + suiBalanceChange );
+
+        return 'SUI requested successfully! ';
+      },
+      error: (error) => {
+        return error.message;
+      },
+    });
+  };
+
  
+  async function transferSui() {
+    const promise = async () => {
+
+      track("Transfer SUI");
+
+      setTransferLoading(true);
+
+      // Validate the transfer amount
+      const parsedAmount = parseFloat(amount);
+      if (isNaN(parsedAmount)) {
+        setTransferLoading(false);
+        throw new Error("Invalid amount");
+      }
+
+      // Get the keypair for the current user.
+      const keypair = await enokiFlow.getKeypair({ network: "testnet" });
+
+      // Create a new transaction block
+      const txb = new TransactionBlock();
+
+      // Add some transactions to the block...
+      const [coin] = txb.splitCoins(txb.gas, [txb.pure(parsedAmount * 10 ** 9)]);
+      txb.transferObjects(
+        [coin],
+        txb.pure(
+          recipientAddress
+        )
+      );
+
+      // Sign and execute the transaction block, using the Enoki keypair
+      const res = await client.signAndExecuteTransactionBlock({
+        signer: keypair,
+        transactionBlock: txb,
+        options: {
+          showEffects: true,
+          showBalanceChanges: true,
+        },
+      });
+
+      setTransferLoading(false);
+
+      console.log("Transfer response", res);
+
+      if (res.effects?.status.status !== "success") {
+        const suiBalanceChange = res.balanceChanges?.filter((balanceChange: BalanceChange) => {
+          return balanceChange.coinType === "0x2::sui::SUI";
+        }).map((balanceChange: BalanceChange) => {
+          return parseInt(balanceChange.amount) / 10 ** 9;
+        }).reduce((acc: number, change: any) => {
+          if (change.coinType === "0x2::sui::SUI") {
+            return acc + parseInt(change.amount);
+          }
+          return acc;
+        }) || 0;
+        setBalance( balance - suiBalanceChange );
+        throw new Error("Transfer failed with status: " + res.effects?.status.error);
+      }
+      return res;
+    }
+
+    toast.promise(promise, {
+      loading: 'Transfer SUI...',
+      success: (data) => {
+
+        const suiBalanceChange = data.balanceChanges?.filter((balanceChange: BalanceChange) => {
+          return balanceChange.coinType === "0x2::sui::SUI";
+        }).map((balanceChange: BalanceChange) => {
+          return parseInt(balanceChange.amount) / 10 ** 9;
+        }).reduce((acc: number, change: any) => {
+          if (change.coinType === "0x2::sui::SUI") {
+            return acc + parseInt(change.amount);
+          }
+          return acc;
+        }) || 0;
+        setBalance( balance - suiBalanceChange );
+
+        return <span className="flex flex-row items-center gap-2">Transfer successful! <a href={`https://suiscan.xyz/testnet/tx/${data.digest}`} target='_blank'><ExternalLink width={12}/></a></span>;
+      },
+      error: (error) => {
+        return error.message;
+      },
+    });
+  }
+
   async function getCount() {
     setCountLoading(true);
     const res = await client.getObject({
@@ -274,7 +409,7 @@ export default function Page() {
           window.location.href = await enokiFlow.createAuthorizationURL({
             provider: "google",
             clientId:'997997426883-2fsmaltfi1altfgmuut0arecl663pnpk.apps.googleusercontent.com',
-            redirectUrl: 'https://suivent.vercel.app',
+            redirectUrl: 'http://localhost:5500',
             network: "testnet",
           });
         }}
