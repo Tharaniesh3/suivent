@@ -17,42 +17,6 @@ const fakeEvents = [
       _id: '123',
     },
   },
-  {
-    _id: '2',
-    imageUrl: '/assets/images/test2.jpg',
-    isFree: true,
-    price: 0,
-    category: { name: 'Art' },
-    startDateTime: new Date(),
-    title: 'Startup Netwroking',
-    organizer: {
-      _id: '124',
-    },
-  },
-  {
-    _id: '3',
-    imageUrl: '/assets/images/sample-event-3.jpg',
-    isFree: false,
-    price: 15,
-    category: { name: 'Tech' },
-    startDateTime: new Date(),
-    title: 'Sample Event 3',
-    organizer: {
-      _id: '125',
-    },
-  },
-  {
-    _id: '4',
-    imageUrl: '/assets/images/sample-event-4.jpg',
-    isFree: false,
-    price: 25,
-    category: { name: 'Education' },
-    startDateTime: new Date(),
-    title: 'Sample Event 4',
-    organizer: {
-      _id: '126',
-    },
-  },
 ];
 
 const auth = () => ({
@@ -77,18 +41,18 @@ const Card = ({ event, hasOrderLink = true, hidePrice = false }: CardProps) => {
   return (
     <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
       <Link
-        href={`/events/${event._id}`}
+        href={`/orders?eventId=${event._id}`}
         style={{ backgroundImage: `url(${event.imageUrl})` }}
         className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
       />
 
       {isFirstEvent && isEventCreator && !hidePrice && ( // Conditionally render only for the first event
         <div className="absolute right-2 top-2 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all">
-          <Link href={`/events/${event._id}/update`}>
+          {/* <Link href={`/orders?eventId=${event._id}`}>
             <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />
-          </Link>
-
-          <DeleteConfirmation eventId={event._id} />
+          </Link> */}
+      <h5 style={{ color: 'green' }}>Live</h5>
+          {/* <DeleteConfirmation eventId={event._id} /> */}
         </div>
       )}
 
@@ -108,7 +72,7 @@ const Card = ({ event, hasOrderLink = true, hidePrice = false }: CardProps) => {
           {formatDateTime(event.startDateTime).dateTime}
         </p>
 
-        <Link href={`/events/${event._id}`}>
+        <Link href={`/orders?eventId=${event._id}`}>
           <p className="p-medium-16 md:p-medium-20 line-clamp-2 flex-1 text-black">{event.title}</p>
         </Link>
 
@@ -119,7 +83,7 @@ const Card = ({ event, hasOrderLink = true, hidePrice = false }: CardProps) => {
 
           {hasOrderLink && (
             <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
-              <p className="text-primary-500">Order Details</p>
+              <p className="text-primary-500">Event Details</p>
               <Image src="/assets/icons/arrow.svg" alt="search" width={10} height={10} />
             </Link>
           )}

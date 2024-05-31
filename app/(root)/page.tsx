@@ -1,9 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import EventList from "@/components/ui/shared/EventList";
 import Event from "@/lib/database/models/event.model";
 import { SuietWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link"; 
+
 
 export default function Home() {
 
@@ -17,7 +20,7 @@ export default function Home() {
               <p className="p-regular-20 md:p-regular-24">
               Book and gain advice from 5,768+ professionals in leading companies with our secure, global platform.
               </p>
-              <Button size="lg" asChild className="button w-full sm:w-fit">
+              <Button size="lg" asChild>
                 <Link href="#events">
                 Explore Now
                 </Link>
@@ -32,7 +35,7 @@ export default function Home() {
       <h2 className="h2-bold">
       Events<br/> Proven Trustworthiness</h2>
       <div className=" flex w-full flex-col gap-5 md:flex-row"></div>
-      CategoryFilter
+      {/* CategoryFilter */}
       <EventList/>
       </section>
       </>

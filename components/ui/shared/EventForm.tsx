@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,8 @@ import { Checkbox } from "../checkbox";
 import { useRouter } from "next/navigation";
 import { IEvent } from "@/lib/database/models/event.model";
 import { FileUploader } from "./FileUploader";
+import Modal from 'react-modal';
+
 
 type EventFormProps = {
   userId: string;
@@ -43,7 +44,8 @@ async function startUpload(files: File[]): Promise<{ url: string }[]> {
 
 const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) => {
   const [files, setFiles] = useState<File[]>([]);
-  const initialValues = event && type === 'Update' 
+  const [modalIsOpen, setModalIsOpen] = useState(false); // State to manage modal visibility
+    const initialValues = event && type === 'Update' 
     ? { 
       ...event, 
       startDateTime: new Date(event.startDateTime), 
@@ -56,11 +58,13 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues
   });
+  const closeModalAndRedirect = () => {
+    setModalIsOpen(false);
+    router.push('/'); // Redirect to the home page
+  };
 
   const onSubmit: SubmitHandler<z.infer<typeof eventFormSchema>> = async (values) => {
-    // Print form values to console
     console.log('Form Values:', values);
-
     let uploadedImageUrl = values.imageUrl;
     if (files.length > 0) {
       const uploadedImages = await startUpload(files);
@@ -69,29 +73,8 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
       }
       uploadedImageUrl = uploadedImages[0].url;
     }
-
     const eventData = { ...values, imageUrl: uploadedImageUrl, userId };
-
-    try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit event');
-      }
-
-      const { event } = await response.json();
-
-      form.reset();
-      router.push(`/events/${event._id}`);
-    } catch (error) {
-      console.error('Failed to submit event:', error);
-    }
+    setModalIsOpen(true);
   };
 
   return (
@@ -115,8 +98,8 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
             name="categoryId"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormControl>
-                  <Dropdown onChangeHandler={field.onChange} value={field.value} />
+               <FormControl>
+                  <Input placeholder="Category" {...field} className="input-field" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -297,6 +280,7 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
           />
         </div>
         <Button 
+        onSubmit={form.handleSubmit(onSubmit)}
           type="submit"
           size="lg"
           disabled={form.formState.isSubmitting}
@@ -306,6 +290,22 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
             'Submitting...'
           ) : `${type} Event `}
         </Button>
+        <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={closeModalAndRedirect} // Close modal and redirect when user tries to close the modal
+      className="Modal"
+      overlayClassName="Overlay"
+      contentLabel="Waiting for Approval"
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <img src="/assets/images/approval.gif" alt="Waiting" style={{ width: '200px' }} />
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Event Approval Pending</h2>
+        <p style={{ fontSize: '16px', marginBottom: '10px', textAlign: 'center' }}>Your event submission is pending approval from the platform. We appreciate your patience.</p>
+        <Button onClick={closeModalAndRedirect} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>OK</Button>
+      </div>
+    </Modal>
+
+
       </form>
     </Form>
   );

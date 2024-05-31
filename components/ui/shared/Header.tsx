@@ -8,8 +8,6 @@ import { useSuiClient } from "@mysten/dapp-kit";
 import { getFaucetHost, requestSuiFromFaucetV0 } from "@mysten/sui.js/faucet";
 import { ExternalLink, Github, LoaderCircle, RefreshCw } from "lucide-react";
 import { Card1, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/shared/card1";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner"
 import { BalanceChange } from "@mysten/sui.js/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -91,137 +89,8 @@ export default function Page() {
     setBalance(parseInt(balance.totalBalance) / 10 ** 9);
     setAccountLoading(false);
   };
-  const onRequestSui = async () => {
-    const promise = async () => {
-      track("Request SUI");
-      // Ensures the user is logged in and has a SUI address.
-      if (!suiAddress) {
-        throw new Error("No SUI address found");
-      }
-
-      if (balance > 3) {
-        throw new Error("You already have enough SUI!");
-      }
-
-      // Request SUI from the faucet.
-      const res = await requestSuiFromFaucetV0({
-        host: getFaucetHost("testnet"),
-        recipient: suiAddress,
-      });
-
-      if (res.error) {
-        throw new Error(res.error);
-      }
-
-      return res;
-
-    };
-    toast.promise(promise, {
-      loading: 'Requesting SUI...',
-      success: (data) => {
-
-        console.log("SUI requested successfully!", data)
-
-        const suiBalanceChange = data.transferredGasObjects.map((faucetUpdate) => {
-          return faucetUpdate.amount / 10 ** 9;
-        }).reduce((acc: number, change: any) => {
-          return acc + change;
-        }, 0);
-        setBalance( balance + suiBalanceChange );
-
-        return 'SUI requested successfully! ';
-      },
-      error: (error) => {
-        return error.message;
-      },
-    });
-  };
 
  
-  async function transferSui() {
-    const promise = async () => {
-
-      track("Transfer SUI");
-
-      setTransferLoading(true);
-
-      // Validate the transfer amount
-      const parsedAmount = parseFloat(amount);
-      if (isNaN(parsedAmount)) {
-        setTransferLoading(false);
-        throw new Error("Invalid amount");
-      }
-
-      // Get the keypair for the current user.
-      const keypair = await enokiFlow.getKeypair({ network: "testnet" });
-
-      // Create a new transaction block
-      const txb = new TransactionBlock();
-
-      // Add some transactions to the block...
-      const [coin] = txb.splitCoins(txb.gas, [txb.pure(parsedAmount * 10 ** 9)]);
-      txb.transferObjects(
-        [coin],
-        txb.pure(
-          recipientAddress
-        )
-      );
-
-      // Sign and execute the transaction block, using the Enoki keypair
-      const res = await client.signAndExecuteTransactionBlock({
-        signer: keypair,
-        transactionBlock: txb,
-        options: {
-          showEffects: true,
-          showBalanceChanges: true,
-        },
-      });
-
-      setTransferLoading(false);
-
-      console.log("Transfer response", res);
-
-      if (res.effects?.status.status !== "success") {
-        const suiBalanceChange = res.balanceChanges?.filter((balanceChange: BalanceChange) => {
-          return balanceChange.coinType === "0x2::sui::SUI";
-        }).map((balanceChange: BalanceChange) => {
-          return parseInt(balanceChange.amount) / 10 ** 9;
-        }).reduce((acc: number, change: any) => {
-          if (change.coinType === "0x2::sui::SUI") {
-            return acc + parseInt(change.amount);
-          }
-          return acc;
-        }) || 0;
-        setBalance( balance - suiBalanceChange );
-        throw new Error("Transfer failed with status: " + res.effects?.status.error);
-      }
-      return res;
-    }
-
-    toast.promise(promise, {
-      loading: 'Transfer SUI...',
-      success: (data) => {
-
-        const suiBalanceChange = data.balanceChanges?.filter((balanceChange: BalanceChange) => {
-          return balanceChange.coinType === "0x2::sui::SUI";
-        }).map((balanceChange: BalanceChange) => {
-          return parseInt(balanceChange.amount) / 10 ** 9;
-        }).reduce((acc: number, change: any) => {
-          if (change.coinType === "0x2::sui::SUI") {
-            return acc + parseInt(change.amount);
-          }
-          return acc;
-        }) || 0;
-        setBalance( balance - suiBalanceChange );
-
-        return <span className="flex flex-row items-center gap-2">Transfer successful! <a href={`https://suiscan.xyz/testnet/tx/${data.digest}`} target='_blank'><ExternalLink width={12}/></a></span>;
-      },
-      error: (error) => {
-        return error.message;
-      },
-    });
-  }
-
   async function getCount() {
     setCountLoading(true);
     const res = await client.getObject({
@@ -289,7 +158,7 @@ export default function Page() {
 
   if (session) {
     return (
-      <header className="w-full border-b">
+      <header className="fixed inset-x-0 top-0 z-40 w-full border-b border-primary-500/10 backdrop-blur-2xl lg:z-50 bg-white/20">
       <div className="wrapper flex items-center justify-between">
          <Link href="/" className="w-36">
           <Image 
@@ -363,16 +232,16 @@ export default function Page() {
                 }
               </CardContent>
               <CardFooter className="flex flex-row gap-2 items-center justify-between">
-                <Button variant={'outline'} size={'sm'} onClick={onRequestSui}>
+                {/* <Button variant={'outline'} size={'sm'} onClick={onRequestSui}>
                   Request SUI
-                </Button>
+                </Button> */}
                 <Button
                   variant={'destructive'}
                   size={'sm'}
                   className="w-full text-center"
                   onClick={async () => {
                     await enokiFlow.logout();
-                    window.location.reload();
+                    window.location.pathname ="";
                   }}
                 >
                   Logout
