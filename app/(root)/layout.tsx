@@ -19,7 +19,7 @@ export default function RootLayout({
   }>) {
     return (
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-      <EnokiFlowProvider apiKey='enoki_public_1646656193035707ff4ef3aecafb455e'>
+      <EnokiFlowProvider apiKey='enoki_public_3ceeb98095165259c905c55aa38d2dee'>
       <WalletProvider>
         <div className="flex h-screen flex-col">      
         <Header/>
