@@ -4,7 +4,6 @@ import { useEnokiFlow } from '@mysten/enoki/react';
 import { useSuiClient } from '@mysten/dapp-kit';
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { useWallet } from '@suiet/wallet-kit';
-
 function createMintNftTxnBlock() {
   const txb = new TransactionBlock();
   const contractAddress =

@@ -20,8 +20,8 @@ const dummyEvent = {
   price: 100,
   category: { _id: '1', name: 'AI' },
   organizer: { firstName: '', lastName: '' },
-  startDateTime: new Date('2024-10-29'),
-  endDateTime: new Date('2024-10-30'),
+  startDateTime: new Date(),
+  endDateTime: new Date(),
   location: 'San Francisco, CA',
   description: 'More than 100 million developers across the world use GitHub. Now in our 10th year, GitHub Universe is the developer event where brands meet their current and future customers to collaborate and shape the future.',
   url: 'https://githubuniverse.com',
@@ -71,12 +71,8 @@ const EventDetails = ({ params: { id }, searchParams }: SearchParamProps) => {
                 <Image src="/assets/icons/calendar.svg" alt="calendar" width={32} height={32} />
                 <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
                   <p>
-                    {formatDateTime(event.startDateTime).dateOnly} - {' '}
-                    {formatDateTime(event.startDateTime).timeOnly}
-                  </p>
-                  <p>
-                    {formatDateTime(event.endDateTime).dateOnly} -  {' '}
-                    {formatDateTime(event.endDateTime).timeOnly}
+                    Thu, Oct 29, 2024 7:03 PM  -  Fri, Oct 30, 2024 7:03 PM
+ 
                   </p>
                 </div>
               </div>

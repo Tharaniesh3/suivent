@@ -61,9 +61,6 @@ export default function Page() {
     }
   }, [session]);
 
-  /**
-   * Complete the Enoki login flow after the user is redirected back to the app.
-   */
   const completeLogin = async () => {
     try {
       await enokiFlow.handleAuthCallback();
