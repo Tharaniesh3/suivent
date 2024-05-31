@@ -16,9 +16,9 @@ export default function Home() {
         <div className="wrapper grid grid-cols-1 gap-5 md:grid-cols-2 2xl:gap-0">
           <div className="flex flex-col justify-center gap-8">
             <h1 className="h1-bold">
-            Connect, Trust, Celebrate: Your Events, Perfected with Blockchain!
+              Bring your events on chain with Sui.
               <p className="p-regular-20 md:p-regular-24">
-              Book and gain advice from 5,768+ professionals in leading companies with our secure, global platform.
+              Create events in 60 seconds. Excite your guests with POAPs
               </p>
               <Button size="lg" asChild>
                 <Link href="#events">
