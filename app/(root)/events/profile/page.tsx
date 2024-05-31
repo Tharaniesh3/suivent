@@ -4,6 +4,7 @@ import { useEnokiFlow } from '@mysten/enoki/react';
 import { useSuiClient } from '@mysten/dapp-kit';
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { useWallet } from '@suiet/wallet-kit';
+
 function createMintNftTxnBlock() {
   const txb = new TransactionBlock();
   const contractAddress =
@@ -66,23 +67,24 @@ export default function Profile() {
     fetchCartEvents();
   }, []);
 
-  async function mintNft() {
-    if (!wallet.connected) return;
+  // async function mintNft() {
+  //   if (!wallet.connected) return;
 
-    const txb = createMintNftTxnBlock();
-    try {
-      const res = await wallet.signAndExecuteTransactionBlock({
-        transactionBlock: txb,
-      });
-      console.log("NFT minted successfully!", res);
-      alert("Congrats! Your NFT is minted!");
-    } catch (e) {
-      alert("Oops, NFT minting failed");
-      console.error("NFT mint failed", e);
-    }
-  }
+  //   const txb = createMintNftTxnBlock();
+  //   try {
+  //     const res = await wallet.signAndExecuteTransactionBlock({
+  //       transactionBlock: txb,
+  //     });
+  //     console.log("NFT minted successfully!", res);
+  //     alert("Congrats! Your NFT is minted!");
+  //   } catch (e) {
+  //     alert("Oops, NFT minting failed");
+  //     console.error("NFT mint failed", e);
+  //   }
+  // }
 
   return (
+    
     <div className='mt-20'>
       <div className="container">
       {loading ? (
@@ -109,7 +111,7 @@ export default function Profile() {
                   <td>{event.date}</td>
                   <td>{event.location}</td>
                   <td>
-                    <button className="mint-button" onClick={mintNft}>Mint NFT</button>
+                    {/* <button className="mint-button" onClick={mintNft}>Mint NFT</button> */}
                   </td>
                 </tr>
               ))}
