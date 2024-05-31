@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { formatDateTime } from '@/lib/utils';
 import { DeleteConfirmation } from './DeleteConfirmation'; // Assume this component handles delete confirmation
+import { useState, useEffect } from 'react'
 
 const fakeEvents = [
   {

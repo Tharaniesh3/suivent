@@ -86,9 +86,7 @@ const EventDetails = ({ params: { id }, searchParams }: SearchParamProps) => {
               </div>
             </div>   
 
-              <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}} onConnectSuccess={succ} >
-              
-Connet Wallet</ConnectButton>   
+              <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}} onConnectSuccess={succ} >Connet Wallet</ConnectButton>   
        
             <div className="flex flex-col gap-2">
               <p className="p-bold-20 text-grey-600">What You'll Learn:</p>

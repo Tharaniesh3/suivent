@@ -72,7 +72,6 @@ export default function Page() {
     } finally {
       const session = await enokiFlow.getSession();
       console.log("Session", session);
-
       if (session && session.jwt){
         setSession(session);
       }
@@ -89,7 +88,6 @@ export default function Page() {
     setBalance(parseInt(balance.totalBalance) / 10 ** 9);
     setAccountLoading(false);
   };
-
  
   async function getCount() {
     setCountLoading(true);

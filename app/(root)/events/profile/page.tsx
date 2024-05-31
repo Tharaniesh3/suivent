@@ -84,12 +84,13 @@ export default function Profile() {
   }
 
   return (
-    <div className="container mt-20">
+    <div className='mt-20'>
+      <div className="container">
       {loading ? (
         <div className="loader">Loading...</div>
       ) : userAddress ? (
         <>
-          <p className="user-address">User Address: {userAddress}</p>
+          <p className="user-address mt-10">User Address: {userAddress}</p>
           <section className='event-section'>
               <h3 className='event-title'>My Event</h3>
           </section>
@@ -197,6 +198,7 @@ export default function Profile() {
           padding: 20px;
         }
       `}</style>
+    </div>
     </div>
   );
 }
