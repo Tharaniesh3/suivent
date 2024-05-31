@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image"
 import Link from "next/link"
-import { useEnokiFlow } from "@mysten/enoki/react";
+import { useEnokiFlow, useZkLogin } from "@mysten/enoki/react";
 import { useEffect, useState } from "react";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { useSuiClient } from "@mysten/dapp-kit";
 import { getFaucetHost, requestSuiFromFaucetV0 } from "@mysten/sui.js/faucet";
 import { ExternalLink, Github, LoaderCircle, RefreshCw } from "lucide-react";
 import { Card1, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/shared/card1";
-
+import { useAuthCallback } from "@mysten/enoki/react";
 import { toast } from "sonner"
 import { BalanceChange } from "@mysten/sui.js/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -21,8 +21,14 @@ import NavItemsWithoutSignIn from "./NavItemsWithoutSignIn";
 
 
 export default function Page() {
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   const client = useSuiClient(); // The SuiClient instance
   const enokiFlow = useEnokiFlow(); // The EnokiFlow instance
+  const zkLoginState = useZkLogin();
+
 
   /**
    * The current user session, if any. This is used to determine whether the user is logged in or
@@ -48,38 +54,38 @@ export default function Page() {
   /**
    * When the page loads, complete the login flow.
    */
-  useEffect(() => {
-    completeLogin();
-  }, []);
+  // useEffect(() => {
+  //   completeLogin();
 
+  // }, []);
+  useAuthCallback();
   /**
    * When the user logs in, fetch the account information.
    */
-  useEffect(() => {
-    if (session) {
-      getAccountInfo();
-      getCount();
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     getAccountInfo();
+  //     getCount();
+  //   }
+  // }, [session]);
 
   /**
    * Complete the Enoki login flow after the user is redirected back to the app.
-   */
-  const completeLogin = async () => {
-    try {
-      await enokiFlow.handleAuthCallback();
-    } catch (error) {
-      console.error("Erro handling auth callback", error);
-    } finally {
-      const session = await enokiFlow.getSession();
-      console.log("Session", session);
-
-      if (session && session.jwt){
-        setSession(session);
-      }
-      window.history.replaceState(null, "", window.location.pathname);
-    }
-  };
+  //  */
+  // const completeLogin = async () => {
+  //   try {
+  //     await enokiFlow.handleAuthCallback();
+  //   } catch (error) {
+  //     console.error("Erro handling auth callback", error);
+  //   } finally {
+  //     // const session = await enokiFlow.getSession();
+  //     // console.log("Session", session);
+  //     // if (session && session.jwt){
+  //     //   setSession(session);
+  //     // }
+  //     window.history.replaceState(null, "", window.location.pathname);
+  //   }
+  // };
 
   const getAccountInfo = async () => {
     setAccountLoading(true);
@@ -137,89 +143,89 @@ export default function Page() {
   };
 
  
-  async function transferSui() {
-    const promise = async () => {
+  // async function transferSui() {
+  //   const promise = async () => {
 
-      track("Transfer SUI");
+  //     track("Transfer SUI");
 
-      setTransferLoading(true);
+  //     setTransferLoading(true);
 
-      // Validate the transfer amount
-      const parsedAmount = parseFloat(amount);
-      if (isNaN(parsedAmount)) {
-        setTransferLoading(false);
-        throw new Error("Invalid amount");
-      }
+  //     // Validate the transfer amount
+  //     const parsedAmount = parseFloat(amount);
+  //     if (isNaN(parsedAmount)) {
+  //       setTransferLoading(false);
+  //       throw new Error("Invalid amount");
+  //     }
 
-      // Get the keypair for the current user.
-      const keypair = await enokiFlow.getKeypair({ network: "testnet" });
+  //     // Get the keypair for the current user.
+  //     const keypair = await enokiFlow.getKeypair({ network: "testnet" });
 
-      // Create a new transaction block
-      const txb = new TransactionBlock();
+  //     // Create a new transaction block
+  //     const txb = new TransactionBlock();
 
-      // Add some transactions to the block...
-      const [coin] = txb.splitCoins(txb.gas, [txb.pure(parsedAmount * 10 ** 9)]);
-      txb.transferObjects(
-        [coin],
-        txb.pure(
-          recipientAddress
-        )
-      );
+  //     // Add some transactions to the block...
+  //     const [coin] = txb.splitCoins(txb.gas, [txb.pure(parsedAmount * 10 ** 9)]);
+  //     txb.transferObjects(
+  //       [coin],
+  //       txb.pure(
+  //         recipientAddress
+  //       )
+  //     );
 
-      // Sign and execute the transaction block, using the Enoki keypair
-      const res = await client.signAndExecuteTransactionBlock({
-        signer: keypair,
-        transactionBlock: txb,
-        options: {
-          showEffects: true,
-          showBalanceChanges: true,
-        },
-      });
+  //     // Sign and execute the transaction block, using the Enoki keypair
+  //     const res = await client.signAndExecuteTransactionBlock({
+  //       signer: keypair,
+  //       transactionBlock: txb,
+  //       options: {
+  //         showEffects: true,
+  //         showBalanceChanges: true,
+  //       },
+  //     });
 
-      setTransferLoading(false);
+  //     setTransferLoading(false);
 
-      console.log("Transfer response", res);
+  //     console.log("Transfer response", res);
 
-      if (res.effects?.status.status !== "success") {
-        const suiBalanceChange = res.balanceChanges?.filter((balanceChange: BalanceChange) => {
-          return balanceChange.coinType === "0x2::sui::SUI";
-        }).map((balanceChange: BalanceChange) => {
-          return parseInt(balanceChange.amount) / 10 ** 9;
-        }).reduce((acc: number, change: any) => {
-          if (change.coinType === "0x2::sui::SUI") {
-            return acc + parseInt(change.amount);
-          }
-          return acc;
-        }) || 0;
-        setBalance( balance - suiBalanceChange );
-        throw new Error("Transfer failed with status: " + res.effects?.status.error);
-      }
-      return res;
-    }
+  //     if (res.effects?.status.status !== "success") {
+  //       const suiBalanceChange = res.balanceChanges?.filter((balanceChange: BalanceChange) => {
+  //         return balanceChange.coinType === "0x2::sui::SUI";
+  //       }).map((balanceChange: BalanceChange) => {
+  //         return parseInt(balanceChange.amount) / 10 ** 9;
+  //       }).reduce((acc: number, change: any) => {
+  //         if (change.coinType === "0x2::sui::SUI") {
+  //           return acc + parseInt(change.amount);
+  //         }
+  //         return acc;
+  //       }) || 0;
+  //       setBalance( balance - suiBalanceChange );
+  //       throw new Error("Transfer failed with status: " + res.effects?.status.error);
+  //     }
+  //     return res;
+  //   }
 
-    toast.promise(promise, {
-      loading: 'Transfer SUI...',
-      success: (data) => {
+  //   toast.promise(promise, {
+  //     loading: 'Transfer SUI...',
+  //     success: (data) => {
 
-        const suiBalanceChange = data.balanceChanges?.filter((balanceChange: BalanceChange) => {
-          return balanceChange.coinType === "0x2::sui::SUI";
-        }).map((balanceChange: BalanceChange) => {
-          return parseInt(balanceChange.amount) / 10 ** 9;
-        }).reduce((acc: number, change: any) => {
-          if (change.coinType === "0x2::sui::SUI") {
-            return acc + parseInt(change.amount);
-          }
-          return acc;
-        }) || 0;
-        setBalance( balance - suiBalanceChange );
+  //       const suiBalanceChange = data.balanceChanges?.filter((balanceChange: BalanceChange) => {
+  //         return balanceChange.coinType === "0x2::sui::SUI";
+  //       }).map((balanceChange: BalanceChange) => {
+  //         return parseInt(balanceChange.amount) / 10 ** 9;
+  //       }).reduce((acc: number, change: any) => {
+  //         if (change.coinType === "0x2::sui::SUI") {
+  //           return acc + parseInt(change.amount);
+  //         }
+  //         return acc;
+  //       }) || 0;
+  //       setBalance( balance - suiBalanceChange );
 
-        return <span className="flex flex-row items-center gap-2">Transfer successful! <a href={`https://suiscan.xyz/testnet/tx/${data.digest}`} target='_blank'><ExternalLink width={12}/></a></span>;
-      },
-      error: (error) => {
-        return error.message;
-      },
-    });
-  }
+  //       return <span className="flex flex-row items-center gap-2">Transfer successful! <a href={`https://suiscan.xyz/testnet/tx/${data.digest}`} target='_blank'><ExternalLink width={12}/></a></span>;
+  //     },
+  //     error: (error) => {
+  //       return error.message;
+  //     },
+  //   });
+  // }
 
   async function getCount() {
     setCountLoading(true);
@@ -286,108 +292,108 @@ export default function Page() {
   //   });
   // }
 
-  if (session) {
-    return (
-      <header className="fixed inset-x-0 top-0 z-40 w-full border-b border-primary-500/10 backdrop-blur-2xl lg:z-50 bg-white/20">
-      <div className="wrapper flex items-center justify-between">
-         <Link href="/" className="w-36">
-          <Image 
-            src="/assets/images/logo.png" width={128} height={38}
-            alt="suivent logo" 
-          />
-        </Link>
-          <nav className="md:flex-between hidden w-full max-w-xs">
-            <NavItems/>
-          </nav>
-        {/* <div className="flex w-32 justify-end gap-3">
-            <Button asChild className="rounded-full" size="lg" style={{ width: '100%' }}>
-            <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff' }}>Connect Wallet</ConnectButton>
-          </Button>
-        </div> */}
-        <MobileNav />
-        <div>
-        <div style={{ width: '10px' }}>
-        <Popover>
-          <PopoverTrigger className="absolute top-4 right-4 max-w-sm" asChild>
-          <div>
-              <Button className="hidden sm:block" variant={'secondary'}>
-                {
-                  accountLoading ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    `${suiAddress?.slice(0, 5)}...${suiAddress?.slice(63)} - ${balance.toPrecision(3)} SUI`
-                  )
-                }
-              </Button>
-              <Avatar className="block sm:hidden">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </div>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Card1 className="border-none shadow-none">
-            <Button variant={'ghost'} size='icon' className="relative top-0 right-0" onClick={getAccountInfo}><RefreshCw width={16} /></Button>
-              <CardHeader>
-                <CardTitle>Account Info</CardTitle>
-                <CardDescription>View the account generated by Enoki&apos;s zkLogin flow.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {
-                  accountLoading ? (
-                    <div className="w-full flex flex-col items-center">
-                      <LoaderCircle className="animate-spin" />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex flex-row gap-1 items-center">
-                        <span>Address:{" "}</span>
-                        {
-                          accountLoading ? (
-                            <span>Loading...</span>
-                          ) : (
-                            <div className="flex flex-row gap-1">
-                              <span>{`${suiAddress?.slice(0, 5)}...${suiAddress?.slice(63)}`}</span>
-                              <a href={`https://suiscan.xyz/testnet/account/${suiAddress}`} target="_blank"><ExternalLink width={12} /></a>
-                            </div>
-                          )
-                        }
-                      </div>
-                      <div>
-                        <span>Balance:{" "}</span>
-                        <span>{balance.toPrecision(3)} SUI</span>
-                      </div>
-                    </>
-                  )
-                }
-              </CardContent>
-              <CardFooter className="flex flex-row gap-2 items-center justify-between">
-                {/* <Button variant={'outline'} size={'sm'} onClick={onRequestSui}>
-                  Request SUI
-                </Button> */}
-                <Button
-                  variant={'destructive'}
-                  size={'sm'}
-                  className="w-full text-center"
-                  onClick={async () => {
-                    await enokiFlow.logout();
-                    window.location.pathname ="";
-                  }}
-                >
-                  Logout
-                </Button>
-              </CardFooter>
-            </Card1>
-          </PopoverContent>
-        </Popover>
-        </div>
-        </div>
-        </div>
-    </header>
-    );
-  }
+  // if (session) {
+  //   return (
+  //     <header className="fixed inset-x-0 top-0 z-40 w-full border-b border-primary-500/10 backdrop-blur-2xl lg:z-50 bg-white/20">
+  //     <div className="wrapper flex items-center justify-between">
+  //        <Link href="/" className="w-36">
+  //         <Image 
+  //           src="/assets/images/logo.png" width={128} height={38}
+  //           alt="suivent logo" 
+  //         />
+  //       </Link>
+  //         <nav className="md:flex-between hidden w-full max-w-xs">
+  //           <NavItems/>
+  //         </nav>
+  //       {/* <div className="flex w-32 justify-end gap-3">
+  //           <Button asChild className="rounded-full" size="lg" style={{ width: '100%' }}>
+  //           <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff' }}>Connect Wallet</ConnectButton>
+  //         </Button>
+  //       </div> */}
+  //       <MobileNav />
+  //       <div>
+  //       <div style={{ width: '10px' }}>
+  //       <Popover>
+  //         <PopoverTrigger className="absolute top-4 right-4 max-w-sm" asChild>
+  //         <div>
+  //             <Button className="hidden sm:block" variant={'secondary'}>
+  //               {
+  //                 accountLoading ? (
+  //                   <LoaderCircle className="animate-spin" />
+  //                 ) : (
+  //                   `${suiAddress?.slice(0, 5)}...${suiAddress?.slice(63)} - ${balance.toPrecision(3)} SUI`
+  //                 )
+  //               }
+  //             </Button>
+  //             <Avatar className="block sm:hidden">
+  //               <AvatarImage src="https://github.com/shadcn.png" />
+  //               <AvatarFallback>CN</AvatarFallback>
+  //             </Avatar>
+  //           </div>
+  //         </PopoverTrigger>
+  //         <PopoverContent>
+  //           <Card1 className="border-none shadow-none">
+  //           <Button variant={'ghost'} size='icon' className="relative top-0 right-0" onClick={getAccountInfo}><RefreshCw width={16} /></Button>
+  //             <CardHeader>
+  //               <CardTitle>Account Info</CardTitle>
+  //               <CardDescription>View the account generated by Enoki&apos;s zkLogin flow.</CardDescription>
+  //             </CardHeader>
+  //             <CardContent>
+  //               {
+  //                 accountLoading ? (
+  //                   <div className="w-full flex flex-col items-center">
+  //                     <LoaderCircle className="animate-spin" />
+  //                   </div>
+  //                 ) : (
+  //                   <>
+  //                     <div className="flex flex-row gap-1 items-center">
+  //                       <span>Address:{" "}</span>
+  //                       {
+  //                         accountLoading ? (
+  //                           <span>Loading...</span>
+  //                         ) : (
+  //                           <div className="flex flex-row gap-1">
+  //                             <span>{`${suiAddress?.slice(0, 5)}...${suiAddress?.slice(63)}`}</span>
+  //                             <a href={`https://suiscan.xyz/testnet/account/${suiAddress}`} target="_blank"><ExternalLink width={12} /></a>
+  //                           </div>
+  //                         )
+  //                       }
+  //                     </div>
+  //                     <div>
+  //                       <span>Balance:{" "}</span>
+  //                       <span>{balance.toPrecision(3)} SUI</span>
+  //                     </div>
+  //                   </>
+  //                 )
+  //               }
+  //             </CardContent>
+  //             <CardFooter className="flex flex-row gap-2 items-center justify-between">
+  //               {/* <Button variant={'outline'} size={'sm'} onClick={onRequestSui}>
+  //                 Request SUI
+  //               </Button> */}
+  //               <Button
+  //                 variant={'destructive'}
+  //                 size={'sm'}
+  //                 className="w-full text-center"
+  //                 onClick={async () => {
+  //                   await enokiFlow.logout();
+  //                   window.location.pathname ="";
+  //                 }}
+  //               >
+  //                 Logout
+  //               </Button>
+  //             </CardFooter>
+  //           </Card1>
+  //         </PopoverContent>
+  //       </Popover>
+  //       </div>
+  //       </div>
+  //       </div>
+  //   </header>
+  //   );
+  // }
   return (
-    <header className="w-full border-b">
+    <header className="fixed inset-x-0 top-0 z-40 w-full border-b border-primary-500/10 backdrop-blur-2xl lg:z-50 bg-white/20">
       <div className="wrapper flex items-center justify-between">
         <Link href="/" className="w-36">
           <Image 
@@ -395,32 +401,36 @@ export default function Page() {
             alt="suivent logo" 
           />
         </Link>
-          
-          <nav className="md:flex-between hidden w-full max-w-xs">
-            <NavItemsWithoutSignIn/>
+
+        {isClient && zkLoginState.address && (
+          <nav className="hidden md:flex w-full max-w-xs justify-center">
+            <NavItems />
           </nav>
-          
+        )}
 
         <div className="flex w-32 justify-end gap-3">
-            
-<Button
-        onClick={async () => {
-          track("Sign in with Google");
-          window.location.href = await enokiFlow.createAuthorizationURL({
-            provider: "google",
-            clientId:'997997426883-2fsmaltfi1altfgmuut0arecl663pnpk.apps.googleusercontent.com',
-            redirectUrl: 'http://localhost:5500',
-            network: "testnet",
-          });
-        }}
-      >
-        Sign in with Google
-      </Button>
-
+          {isClient ? (
+            !zkLoginState.address ? (
+              <Button
+                onClick={async () => {
+                  window.location.href = await enokiFlow.createAuthorizationURL({
+                    provider: "google",
+                    network: "testnet",
+                    clientId: '997997426883-2fsmaltfi1altfgmuut0arecl663pnpk.apps.googleusercontent.com',
+                    redirectUrl: "http://localhost:5500",
+                  });
+                }}
+              >
+                Sign in with Google
+              </Button>
+            ) : (
+              <Button onClick={() => enokiFlow.logout()}>Sign Out</Button>
+            )
+          ) : null}
         </div>
+
         <MobileNav />
       </div>
     </header>
-  )
-}
-
+  );
+};

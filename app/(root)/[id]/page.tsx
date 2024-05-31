@@ -72,7 +72,6 @@ const EventDetails = ({ params: { id }, searchParams }: SearchParamProps) => {
                 <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
                   <p>
                     Thu, Oct 29, 2024 7:03 PM  -  Fri, Oct 30, 2024 7:03 PM
- 
                   </p>
                 </div>
               </div>

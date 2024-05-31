@@ -38,7 +38,6 @@ const Card = ({ event, hasOrderLink = true, hidePrice = false }: CardProps) => {
 
   const isEventCreator = userId === event.organizer._id.toString();
   const isFirstEvent = fakeEvents[0]._id === event._id; // Check if the event is the first one in the array
-
   return (
     <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
       <Link
@@ -69,7 +68,7 @@ const Card = ({ event, hasOrderLink = true, hidePrice = false }: CardProps) => {
           </div>
         )}
 
-        <p className="p-medium-16 p-medium-18 text-grey-500">
+        <p className="p-medium-16 p-medium-18 text-grey-500 " suppressHydrationWarning >
           {formatDateTime(event.startDateTime).dateTime}
         </p>
 
