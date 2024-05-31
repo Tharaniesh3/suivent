@@ -78,7 +78,7 @@ export default function Page() {
 
   const getAccountInfo = async () => {
     setAccountLoading(true);
-    const keypair = await enokiFlow.getKeypair({ network: "testnet" });
+    const keypair = await enokiFlow.getKeypair({ network: "mainnet" });
     const address = keypair.toSuiAddress();
     setSuiAddress(address);
     const balance = await client.getBalance({ owner: address });
@@ -274,7 +274,7 @@ export default function Page() {
           window.location.href = await enokiFlow.createAuthorizationURL({
             provider: "google",
             clientId:'997997426883-2fsmaltfi1altfgmuut0arecl663pnpk.apps.googleusercontent.com',
-            redirectUrl: 'http://localhost:5500',
+            redirectUrl: 'https://suivent.vercel.app',
             network: "testnet",
           });
         }}

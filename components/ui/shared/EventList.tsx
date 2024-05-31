@@ -106,3 +106,21 @@ const EventList = () => {
 };
 
 export default EventList;
+
+
+
+// async function mintNft() {
+//   if (!wallet.connected) return;
+
+//   const txb = createMintNftTxnBlock();
+//   try {
+//     const res = await wallet.signAndExecuteTransactionBlock({
+//       transactionBlock: txb,
+//     });
+//     console.log("NFT minted successfully!", res);
+//     alert("Congrats! Your NFT is minted!");
+//   } catch (e) {
+//     alert("Oops, NFT minting failed");
+//     console.error("NFT mint failed", e);
+//   }
+// }

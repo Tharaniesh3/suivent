@@ -271,7 +271,7 @@ const EventForm: React.FC<EventFormProps> = ({ userId, type, event, eventId }) =
                       width={24}
                       height={24}
                     />
-                    <Input placeholder="URL" {...field} className="input-field" />
+                    <Input placeholder="URL(https://www.google.com)" {...field} className="input-field" />
                   </div>
                 </FormControl>
                 <FormMessage />
