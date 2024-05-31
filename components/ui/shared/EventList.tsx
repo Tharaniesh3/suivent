@@ -9,8 +9,8 @@ const fakeEvents = [
   {
     _id: '1',
     imageUrl: '/assets/images/test1.png',
-    isFree: false,
-    price: 100,
+    isFree: true,
+    price: 0,
     category: { name: 'AI' },
     startDateTime: new Date(),
     title: 'Github Universe 2024',
