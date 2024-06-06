@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useEnokiFlow } from '@mysten/enoki/react';
 import { useSuiClient } from '@mysten/dapp-kit';
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { useWallet } from '@suiet/wallet-kit';
+import { ConnectButton, useWallet } from '@suiet/wallet-kit';
 
 function createMintNftTxnBlock() {
   const txb = new TransactionBlock();
@@ -26,7 +26,9 @@ function createMintNftTxnBlock() {
 
   return txb;
 }
-
+async function succ(){
+  alert("Please wait...!");
+}
 interface Event {
   id: string;
   name: string;
@@ -90,6 +92,7 @@ export default function Profile() {
       ) : userAddress ? (
         <>
           <p className="user-address mt-10">User Address: {userAddress}</p>
+          <center><ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}} onConnectSuccess={succ} >Connet Wallet</ConnectButton></center>
           <section className='event-section'>
               <h3 className='event-title'>My Event</h3>
           </section>

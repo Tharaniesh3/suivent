@@ -417,7 +417,7 @@ export default function Page() {
                     provider: "google",
                     network: "testnet",
                     clientId: '997997426883-2fsmaltfi1altfgmuut0arecl663pnpk.apps.googleusercontent.com',
-                    redirectUrl: "https://suivent.vercel.app",
+                    redirectUrl: "http://localhost:5500",
                   });
                 }}
               >

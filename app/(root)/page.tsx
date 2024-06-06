@@ -28,8 +28,12 @@ export default function Home() {
             </h1>
 
           </div>
+          {/* <iframe src='https://my.spline.design/nftdisplaybox-5ef8d71230f9f9b351e503d346393070/' frameBorder='0' width='100%' height='100%'></iframe> */}
         <Image src={"/assets/images/hero.png"} alt={"hero"} height={1000} width={1000} className="max-h-[70vh] object-contain object-center 2xl:max-h-[50vh]" />
         </div>
+      </section>
+      <section>
+
       </section>
       <section id = "events" className="wrapper my-8 flex flex-col gap-89 md:gap-12">
       <h2 className="h2-bold">
@@ -38,6 +42,7 @@ export default function Home() {
       {/* CategoryFilter */}
       <EventList/>
       </section>
+      
       </>
   );
 }

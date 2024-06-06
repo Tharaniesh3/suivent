@@ -27,9 +27,6 @@ const dummyEvent = {
   url: 'https://githubuniverse.com',
   imageUrl: '/assets/images/test1.png',
 };
-async function succ(){
-  alert("Navigate to profile page to mint nft!");
-}
 const EventDetails = ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = dummyEvent;
   const [showModal, setShowModal] = useState(false)
@@ -80,9 +77,7 @@ const EventDetails = ({ params: { id }, searchParams }: SearchParamProps) => {
                 <p className="p-medium-16 lg:p-regular-20">{event.location}</p>
               </div>
             </div>   
-
-              <ConnectButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}} onConnectSuccess={succ} >Connet Wallet</ConnectButton>   
-       
+              <h3>Go to your profile to mint NFT for this event.</h3>       
             <div className="flex flex-col gap-2">
               <p className="p-bold-20 text-grey-600">What You'll Learn:</p>
               <p className="p-medium-16 lg:p-regular-18">{event.description}</p>
