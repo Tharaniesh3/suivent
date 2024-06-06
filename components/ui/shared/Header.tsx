@@ -18,7 +18,7 @@ import NavItems from "./NavItems";
 import MobileNav from "./MobileNav";
 import { Button } from "../button";
 import NavItemsWithoutSignIn from "./NavItemsWithoutSignIn";
-import router, { useRouter } from "next/router";
+import { useRouter } from 'next/navigation'
 
 
 export default function Page() {
@@ -29,12 +29,13 @@ export default function Page() {
   const client = useSuiClient(); // The SuiClient instance
   const enokiFlow = useEnokiFlow(); // The EnokiFlow instance
   const zkLoginState = useZkLogin();
+  const router = useRouter(); // Initialize useRouter correctly
 
-  const handleLogout = () => {
-    enokiFlow.logout(); // Perform logout action
+  
+  const handleLogout = async () => {
+    await enokiFlow.logout(); // Ensure logout is completed
     router.push('/'); // Redirect to home page
   };
-  
   /**
    * The current user session, if any. This is used to determine whether the user is logged in or
    * not.
