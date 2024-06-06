@@ -6,7 +6,6 @@ import Event from "@/lib/database/models/event.model";
 import { SuietWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link"; 
-import Spline from '@splinetool/react-spline';
 
 
 export default function Home() {
@@ -29,11 +28,8 @@ export default function Home() {
             </h1>
 
           </div>
-          <Spline scene="https://prod.spline.design/b6Q6WF0NfeP5FNuI/scene.splinecode"  height={1500} width={1500}  className="max-h-[80vh] object-contain object-center 2xl:max-h-[50vh]"/>
+        <Image src={"/assets/images/hero.png"} alt={"hero"} height={1000} width={1000} className="max-h-[70vh] object-contain object-center 2xl:max-h-[50vh]" />
         </div>
-      </section>
-      <section>
-
       </section>
       <section id = "events" className="wrapper my-8 flex flex-col gap-89 md:gap-12">
       <h2 className="h2-bold">
@@ -42,7 +38,6 @@ export default function Home() {
       {/* CategoryFilter */}
       <EventList/>
       </section>
-      
       </>
   );
 }

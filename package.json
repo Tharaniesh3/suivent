@@ -24,6 +24,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@splinetool/react-spline": "^3.1.0",
+    "@splinetool/runtime": "^1.5.2",
     "@suiet/wallet-kit": "^0.2.24",
     "@suiet/wallet-sdk": "^0.2.21",
     "@types/react-modal": "^3.16.3",
