@@ -18,7 +18,7 @@ import NavItems from "./NavItems";
 import MobileNav from "./MobileNav";
 import { Button } from "../button";
 import NavItemsWithoutSignIn from "./NavItemsWithoutSignIn";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 
 
 export default function Page() {
@@ -30,7 +30,6 @@ export default function Page() {
   const enokiFlow = useEnokiFlow(); // The EnokiFlow instance
   const zkLoginState = useZkLogin();
 
-  const router = useRouter(); // Initialize useRouter
   const handleLogout = () => {
     enokiFlow.logout(); // Perform logout action
     router.push('/'); // Redirect to home page
