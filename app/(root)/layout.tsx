@@ -17,7 +17,7 @@ const { networkConfig } = createNetworkConfig({
 
 // Ethos configuration with preferred wallets
 const ethosConfiguration = {
-  preferredWallets: ['Ethos Wallet', 'Suit Wallet', 'Sui Wallet'],
+  preferredWallets: ['Ethos Wallet', 'SuietWallet', 'SuiWallet'],
   network: NETWORK,
   chain: Chain.SUI_TESTNET
 };
