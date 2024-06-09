@@ -150,7 +150,25 @@ export default function Profile() {
                 ) : userAddress ? (
                     <>
                         <p className="user-address mt-10">User Address: {userAddress}</p>
-                        <center><SignInButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}}>Connect Wallet</SignInButton></center>
+                        <center>{!wallet ? (
+          <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+            Connect
+          </SignInButton>
+        ) : (
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+                Connected to wallet
+              </h2>              <div className="place-content-center text-base font-medium text-ethos-primary space-x-1">
+                <div className="text-xs text-gray-500">
+                  (1 sui is 10^9 Mist)
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4">
+            </div>
+          </div>
+        )}</center>
                         <section className='event-section'>
                             <h3 className='event-title'>My Event</h3>
                         </section>
