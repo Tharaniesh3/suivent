@@ -18,7 +18,6 @@ const { networkConfig } = createNetworkConfig({
 // Ethos configuration with preferred wallets
 const ethosConfiguration = {
   preferredWallets: ['Ethos Wallet'],
-  apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
   network: NETWORK,
   chain: Chain.SUI_TESTNET
 };

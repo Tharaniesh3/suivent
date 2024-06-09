@@ -26,88 +26,114 @@ interface CartEvent {
 
 // The Mint component, as provided
 const Mint = () => {
-    const { wallet } = ethos.useWallet();
-    const [nftObjectId, setNftObjectId] = useState<string | undefined>();
+  const { wallet } = ethos.useWallet();
+  const [nftName, setNftName] = useState('');
+  const [nftDescription, setNftDescription] = useState('');
+  const [nftImageUrl, setNftImageUrl] = useState('');
+  const [nftObjectId, setNftObjectId] = useState<string | undefined>();
 
-    const mint = useCallback(async () => {
-        if (!wallet?.currentAccount) {
-            console.log("Wallet is not connected or no current account found.");
-            return;
-        }
+  const mint = useCallback(async () => {
+      if (!wallet?.currentAccount) {
+          console.log("Wallet is not connected or no current account found.");
+          return;
+      }
 
-        try {
-            console.log("Starting the mint process...");
+      try {
+          console.log("Starting the mint process...");
 
-            const transactionBlock = new TransactionBlock();
-            transactionBlock.moveCall({
-                target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
-                arguments: [
-                    transactionBlock.pure("Ethos Example NFT"),
-                    transactionBlock.pure("A sample NFT from Ethos Wallet."),
-                    transactionBlock.pure("https://ethoswallet.xyz/assets/images/ethos-email-logo.png"),
-                ]
-            });
+          const transactionBlock = new TransactionBlock();
+          transactionBlock.moveCall({
+              target: `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_nft::mint_to_sender`,
+              arguments: [
+                  transactionBlock.pure(nftName),
+                  transactionBlock.pure(nftDescription),
+                  transactionBlock.pure(nftImageUrl),
+              ]
+          });
 
-            console.log("Transaction block created:", transactionBlock);
+          console.log("Transaction block created:", transactionBlock);
 
-            const response = await wallet.signAndExecuteTransactionBlock({
-                transactionBlock,
-                options: {
-                    showObjectChanges: true,
-                }
-            });
+          const response = await wallet.signAndExecuteTransactionBlock({
+              transactionBlock,
+              options: {
+                  showObjectChanges: true,
+              }
+          });
 
-            console.log("Transaction response received:", response);
+          console.log("Transaction response received:", response);
 
-            if (response?.objectChanges) {
-                const createdObject = response.objectChanges.find(
-                    (e) => e.type === "created"
-                );
-                if (createdObject && "objectId" in createdObject) {
-                    setNftObjectId(createdObject.objectId);
-                    console.log("NFT minted successfully with object ID:", createdObject.objectId);
-                } else {
-                    console.log("No created object found in response.");
-                }
-            } else {
-                console.log("No object changes found in response.");
-            }
-        } catch (error) {
-            console.error("Error during minting:", error);
-        }
-    }, [wallet]);
+          if (response?.objectChanges) {
+              const createdObject = response.objectChanges.find(
+                  (e) => e.type === "created"
+              );
+              if (createdObject && "objectId" in createdObject) {
+                  setNftObjectId(createdObject.objectId);
+                  console.log("NFT minted successfully with object ID:", createdObject.objectId);
+              } else {
+                  console.log("No created object found in response.");
+              }
+          } else {
+              console.log("No object changes found in response.");
+          }
+      } catch (error) {
+          console.error("Error during minting:", error);
+      }
+  }, [wallet, nftName, nftDescription, nftImageUrl]);
 
-    const reset = useCallback(() => {
-        setNftObjectId(undefined);
-    }, []);
+  const reset = useCallback(() => {
+      setNftObjectId(undefined);
+      setNftName('');
+      setNftDescription('');
+      setNftImageUrl('');
+  }, []);
 
-    useEffect(() => {
-        reset();
-    }, [reset]);
+  useEffect(() => {
+      reset();
+  }, [reset]);
 
-    return (
-        <div className='flex flex-col gap-6'>
-            {nftObjectId && (
-                <SuccessMessage reset={reset}>
-                    <a 
-                        href={`https://explorer.sui.io/objects/${nftObjectId}?network=testnet`}
-                        target="_blank" 
-                        rel="noreferrer"
-                        className='underline font-blue-600' 
-                    >
-                        View Your NFT on the TestNet Explorer 
-                    </a>
-                </SuccessMessage>
-            )}
-            <Button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={mint}
-            >
-                Mint an NFT
-            </Button>
-        </div>
-    )
+  return (
+      <div className='flex flex-col gap-6'>
+          {nftObjectId && (
+              <SuccessMessage reset={reset}>
+                  <a 
+                      href={`https://explorer.sui.io/objects/${nftObjectId}?network=testnet`}
+                      target="_blank" 
+                      rel="noreferrer"
+                      className='underline font-blue-600' 
+                  >
+                      View Your NFT on the TestNet Explorer 
+                  </a>
+              </SuccessMessage>
+          )}
+          <div className="flex flex-col gap-4">
+              <input
+                  type="text"
+                  value={nftName}
+                  onChange={(e) => setNftName(e.target.value)}
+                  placeholder="NFT Name"
+              />
+              <textarea
+                  value={nftDescription}
+                  onChange={(e) => setNftDescription(e.target.value)}
+                  placeholder="NFT Description"
+              />
+              <input
+                  type="text"
+                  value={nftImageUrl}
+                  onChange={(e) => setNftImageUrl(e.target.value)}
+                  placeholder="NFT Image URL"
+              />
+          </div>
+          <Button
+              className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              onClick={mint}
+          >
+              Mint an NFT
+          </Button>
+      </div>
+  )
 }
+
 
 export default function Profile() {
     const wallet = useWallet();
@@ -159,13 +185,12 @@ export default function Profile() {
             <div className="flex flex-col gap-2">
               <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
                 Connected to wallet
-              </h2>              <div className="place-content-center text-base font-medium text-ethos-primary space-x-1">
-                <div className="text-xs text-gray-500">
-                  (1 sui is 10^9 Mist)
-                </div>
-              </div>
+              </h2>
+              <code>{wallet.address}</code>
+
             </div>
             <div className="flex flex-col gap-4">
+              {/* <Disconnect /> */}
             </div>
           </div>
         )}</center>
@@ -188,7 +213,7 @@ export default function Profile() {
                                         <td>{event.date}</td>
                                         <td>{event.location}</td>
                                         <td>
-                                            <Mint /> {/* Replacing mintNft button with Mint component */}
+                                            <Mint />
                                         </td>
                                     </tr>
                                 ))}
