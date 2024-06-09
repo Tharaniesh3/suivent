@@ -26,10 +26,10 @@ interface CartEvent {
 
 // The Mint component, as provided
 const Mint = () => {
-  const { status, wallet } = ethos.useWallet();
-  const [nftName, setNftName] = useState('');
-  const [nftDescription, setNftDescription] = useState('');
-  const [nftImageUrl, setNftImageUrl] = useState('');
+  const { wallet } = ethos.useWallet();
+  const [nftName, setNftName] = useState('Default Name');
+  const [nftDescription, setNftDescription] = useState('Default Description');
+  const [nftImageUrl, setNftImageUrl] = useState('https://example.com/default-image.jpg');
   const [nftObjectId, setNftObjectId] = useState<string | undefined>();
 
   const mint = useCallback(async () => {
@@ -82,9 +82,9 @@ const Mint = () => {
 
   const reset = useCallback(() => {
       setNftObjectId(undefined);
-      setNftName('');
-      setNftDescription('');
-      setNftImageUrl('');
+      setNftName('NFT');
+      setNftDescription('NFT Description');
+      setNftImageUrl('https://raw.githubusercontent.com/Tharaniesh3/suivent/main/public/assets/images/test1.png');
   }, []);
 
   useEffect(() => {
@@ -127,11 +127,12 @@ const Mint = () => {
           <Button
               className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
               onClick={mint}
+              disabled={!nftName || !nftDescription || !nftImageUrl}
           >
               Mint an NFT
           </Button>
       </div>
-  )
+  );
 }
 
 
