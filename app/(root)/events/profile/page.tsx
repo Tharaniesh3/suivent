@@ -82,8 +82,8 @@ const Mint = () => {
 
   const reset = useCallback(() => {
       setNftObjectId(undefined);
-      setNftName('');
-      setNftDescription('');
+      setNftName('NFT');
+      setNftDescription('NFT Description');
       setNftImageUrl('https://raw.githubusercontent.com/Tharaniesh3/suivent/main/public/assets/images/test1.png');
   }, []);
 
