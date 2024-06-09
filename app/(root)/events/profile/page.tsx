@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useEnokiFlow } from '@mysten/enoki/react';
 import { useSuiClient } from '@mysten/dapp-kit';
-import { ConnectButton, useWallet } from '@suiet/wallet-kit';
+import { ConnectButton } from '@suiet/wallet-kit';
 import { ethos, SignInButton, TransactionBlock } from 'ethos-connect';
 import { Button } from '@/components/ui/button';
 
@@ -26,7 +26,7 @@ interface CartEvent {
 
 // The Mint component, as provided
 const Mint = () => {
-  const { wallet } = ethos.useWallet();
+  const { status, wallet } = ethos.useWallet();
   const [nftName, setNftName] = useState('');
   const [nftDescription, setNftDescription] = useState('');
   const [nftImageUrl, setNftImageUrl] = useState('');
@@ -136,7 +136,7 @@ const Mint = () => {
 
 
 export default function Profile() {
-    const wallet = useWallet();
+  const { status, wallet } = ethos.useWallet();
     const enokiFlow = useEnokiFlow();
     const client = useSuiClient();
 
