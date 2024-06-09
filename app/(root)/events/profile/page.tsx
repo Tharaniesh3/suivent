@@ -150,7 +150,7 @@ export default function Profile() {
                 ) : userAddress ? (
                     <>
                         <p className="user-address mt-10">User Address: {userAddress}</p>
-                        <center></><SignInButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}}>Connect Wallet</SignInButton></center>
+                        <center><SignInButton style={{ backgroundColor: '#624cf5', color: '#ffffff'}}>Connect Wallet</SignInButton></center>
                         <section className='event-section'>
                             <h3 className='event-title'>My Event</h3>
                         </section>
