@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Suivent
 
-## Getting Started
+Suivent is a event management application using Sui blockchain technology to provide a seamless and secure event management experience. By integrating NFTs, zkLogin, and the Suiet & Sui Wallet, Suivent offers a modern approach to managing and participating in events with enhanced security and user experience.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Blockchain Integration:** Utilizes the Sui blockchain for secure and transparent event management.
+- **NFT Tickets:** Issues and manages event tickets as NFTs for verification and authenticity.
+- **zkLogin Authentication:** Provides secure and privacy-preserving login through zkLogin.
+- **Suiet & Sui Wallet Support:** Integrates with Suiet and Sui Wallet for easy management of digital assets and tickets.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Sample Image
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+!(https://raw.githubusercontent.com/Tharaniesh3/suivent/main/Suivents.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+*Example screenshot of the Suivent application interface.*
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+To set up Suivent locally, follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/suivent.git
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Navigate to the project directory:
+    ```bash
+    cd suivent
+    ```
 
-## Deploy on Vercel
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Configure your environment variables by creating a `.env` file based on the `.env.example` template.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+5. Start the application:
+    ```bash
+    npm start
+    ```
+
+## Usage
+
+Once the application is running, you can access Suivent through your web browser. The application will guide you through setting up your event, issuing tickets, and managing participants.
+
+
+
+## Contact
+
+For any questions or inquiries, please contact [Tharaniesh](https://www.instagram.com/imthaxx/).
+
