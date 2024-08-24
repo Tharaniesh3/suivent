@@ -9,8 +9,6 @@ Suivent is a event management application using Sui blockchain technology to pro
 - **zkLogin Authentication:** Provides secure and privacy-preserving login through zkLogin.
 - **Suiet & Sui Wallet Support:** Integrates with Suiet and Sui Wallet for easy management of digital assets and tickets.
 
-## Sample Image
-
 ![Suivent](https://raw.githubusercontent.com/Tharaniesh3/suivent/main/Suivents.png)
 
 *Example screenshot of the Suivent application interface.*
