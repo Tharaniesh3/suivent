@@ -11,7 +11,7 @@ Suivent is a event management application using Sui blockchain technology to pro
 
 ## Sample Image
 
-!(https://raw.githubusercontent.com/Tharaniesh3/suivent/main/Suivents.png)
+![Suivent](https://raw.githubusercontent.com/Tharaniesh3/suivent/main/Suivents.png)
 
 *Example screenshot of the Suivent application interface.*
 
